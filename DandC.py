@@ -69,7 +69,7 @@ for video_id in video_ids:
         # 這裡檔名加入影片 ID、片段編號以及文字 (可自行調整格式)
         output_file = f"{video_id}_segment_{i+1}_{safe_text}.mp4"
         # 將本筆資料存入 CSV 列表
-        csv_rows.append([video_id, output_file, seg_text, start, end])
+        csv_rows.append([video_id, output_file, seg_text])
         
         # 使用 ffmpeg 裁剪影片
         # 此處採用：視頻流直接複製；音訊流轉換為 AAC (解決 OPUS 與 MP4 相容性問題)
@@ -91,6 +91,6 @@ for video_id in video_ids:
 csv_file = "segments_mapping.csv"
 with open(csv_file, 'w', encoding='utf-8', newline='') as f_csv:
     writer = csv.writer(f_csv)
-    writer.writerow(["VideoID", "SegmentFile", "SegmentText", "Start", "End"])  # CSV 標題
+    writer.writerow(["VideoID", "SegmentFile", "SegmentText"])  # CSV 標題
     writer.writerows(csv_rows)
 print(f"CSV 對照表已儲存為 {csv_file}")
