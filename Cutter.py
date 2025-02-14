@@ -2,7 +2,10 @@ import json
 import subprocess
 import csv
 import re
+import time
+import os 
 
+output_dir = r"C:\Users\chunc\Desktop\PROJECT\-ST-downloadCutter\data"
 # 假設 JSON 內容存放在 'video_segments.json' 文件中
 with open('video_segments.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
@@ -25,7 +28,7 @@ csv_rows = []  # 用來存放每筆資料：檔名、原始文字、start、end
 for i, (start, end, seg_text) in enumerate(zip(start_times, end_times, texts)):
     # output_file = f"{video_id}_segment_{i+1}.mp4"
     output_file = f"{video_id}_segment_{i+1}_{seg_text}.mp4"
-    
+    output_file = os.path.join(output_dir, f"{video_id}_segment_{i+1}_{seg_text}.mp4")    
     csv_rows.append([output_file, seg_text, start, end])
     
     # 使用 ffmpeg 命令剪輯影片
@@ -34,7 +37,9 @@ for i, (start, end, seg_text) in enumerate(zip(start_times, end_times, texts)):
         "-i", input_file,
         "-ss", str(start),
         "-to", str(end),
-        "-c:v", "copy",
+        "-c:v", "libx264",  # 重新編碼視頻流為 H264
+        "-preset", "fast",
+        "-crf", "23",
         "-c:a", "aac",    # 音訊流轉換為 AAC
         "-b:a", "128k",   # 設定音訊比特率為 128 kbps
         output_file
